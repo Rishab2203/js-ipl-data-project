@@ -1,5 +1,5 @@
 //Extra runs conceded per team in the year 2016
-
+const fs = require("fs");
 const csvToJson = require("./index.js");
 
 const deliveriesData = csvToJson("../data/deliveries.csv");
@@ -32,5 +32,16 @@ function getExtraRunsConcededByYear(year) {
     }, {});
   return result;
 }
+
+fs.writeFile(
+  "../public/output/extra-runs-conceded-byYear.json",
+  JSON.stringify(getExtraRunsConcededByYear(2016), null, 2),
+  (err) => {
+    if (err) {
+      throw new Error(err);
+    }
+    console.log("file created");
+  }
+);
 
 console.log(getExtraRunsConcededByYear(2016));

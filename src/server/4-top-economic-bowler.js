@@ -1,3 +1,4 @@
+const fs = require("fs");
 const csvToJson = require("./index.js");
 //Top 10 economical bowlers in the year 2015
 
@@ -38,5 +39,17 @@ function getTopEconomicBowlersByYear(year) {
   economies = Object.entries(economies).sort((a, b) => a[1] - b[1]);
   return economies.slice(0, 11);
 }
+
+fs.writeFile(
+  "../public/output/top-economic-bowler-byYear.json",
+  JSON.stringify(getTopEconomicBowlersByYear(2015), null, 2),
+  (err) => {
+    if (err) {
+      throw new Error(err);
+    }
+    console.log("file created");
+  }
+);
+
 module.exports = getTopEconomicBowlersByYear;
 console.log(getTopEconomicBowlersByYear(2015));

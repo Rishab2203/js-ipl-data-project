@@ -1,4 +1,5 @@
 //Find a player who has won the highest number of Player of the Match awards for each season
+const fs = require("fs");
 const csvToJson = require("./index.js");
 
 const matchesData = csvToJson("../data/matches.csv");
@@ -36,4 +37,14 @@ function getPlayerOfTheMatchBySeason() {
   return result;
 }
 
+fs.writeFile(
+  "../public/output/player-of-the-match.json",
+  JSON.stringify(getPlayerOfTheMatchBySeason(), null, 2),
+  (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log("file Created");
+  }
+);
 console.log(getPlayerOfTheMatchBySeason());

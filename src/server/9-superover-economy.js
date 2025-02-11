@@ -1,5 +1,5 @@
 //Find the bowler with the best economy in super overs
-
+const fs = require("fs");
 const csvToJson = require("./index.js");
 
 const deliveriesData = csvToJson("../data/deliveries.csv");
@@ -31,5 +31,17 @@ function getTopEconomicBowlersInSuperOver() {
   economies = Object.entries(economies).sort((a, b) => a[1] - b[1]);
   return economies.slice(0, 11);
 }
+
+fs.writeFile(
+  "../public/output/superover-economy.json",
+  JSON.stringify(getTopEconomicBowlersInSuperOver(), null, 2),
+  (err) => {
+    if (err) {
+      throw err;
+    }
+    console.log("Json created");
+  }
+);
+
 module.exports = getTopEconomicBowlersInSuperOver;
 console.log(getTopEconomicBowlersInSuperOver());

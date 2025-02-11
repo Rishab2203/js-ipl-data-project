@@ -1,5 +1,5 @@
 //Find the highest number of times one player has been dismissed by another player
-
+const fs = require("fs");
 const csvToJson = require("./index");
 
 const deliveriesData = csvToJson("../data/deliveries.csv");
@@ -35,6 +35,17 @@ function getHighestDismissal() {
   }, {});
   return result;
 }
+
+fs.writeFile(
+  "../public/output/highest-dismissal.json",
+  JSON.stringify(getHighestDismissal(), null, 2),
+  (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log("files created");
+  }
+);
 
 module.exports = getHighestDismissal;
 console.log(getHighestDismissal());
