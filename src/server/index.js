@@ -25,7 +25,7 @@ function csvToJson(path) {
 }
 
 const outputToJson = (path, cb) => {
-  fs.writeFile(path, JSON.stringify(cb(), null, 2), (err) => {
+  fs.writeFile(path, JSON.stringify(cb, null, 2), (err) => {
     if (err) {
       console.log(err);
     }

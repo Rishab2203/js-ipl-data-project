@@ -33,7 +33,7 @@ function getExtraRunsConcededByYear(year) {
 
 outputToJson(
   "../public/output/extra-runs-conceded-byYear.json",
-  getExtraRunsConcededByYear
+  getExtraRunsConcededByYear(2016)
 );
 
 module.exports = getExtraRunsConcededByYear;

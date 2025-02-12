@@ -16,9 +16,9 @@ function strikeRateBySeason(playerName) {
   }, {});
 
   const deliveries = deliveriesData.filter(
-    (delivery) => (delivery.batsman = playerName)
+    (delivery) => delivery.batsman === playerName
   );
-  const result = deliveries.reduce((acc, delivery) => {
+  const totalRunsAndDeliveries = deliveries.reduce((acc, delivery) => {
     let season = "";
     for (let sea in seasonById) {
       if (seasonById[sea].includes(delivery["match_id"])) {
@@ -32,19 +32,33 @@ function strikeRateBySeason(playerName) {
     if (!acc[delivery["batsman"]] || !acc[delivery["batsman"]][season]) {
       acc[delivery["batsman"]] = {
         ...acc[delivery["batsman"]],
-        [season]: batsman_runs,
+        [season]: [batsman_runs, 1],
       };
     } else {
-      acc[delivery["batsman"]][season] =
-        acc[delivery["batsman"]][season] + batsman_runs;
+      acc[delivery["batsman"]][season][0] =
+        acc[delivery["batsman"]][season][0] + batsman_runs;
+      acc[delivery["batsman"]][season][1] += 1;
     }
     return acc;
   }, {});
-  return result;
+
+  let playerTotalRunsAndDeliveries = totalRunsAndDeliveries[playerName];
+
+  for (let season in playerTotalRunsAndDeliveries) {
+    let [totalRuns, totalDeliveries] = playerTotalRunsAndDeliveries[season];
+    totalRunsAndDeliveries[playerName][season] = Math.floor(
+      (totalRuns / totalDeliveries) * 100
+    );
+  }
+
+  return totalRunsAndDeliveries;
 }
 
-outputToJson("../public/output/strike-rate-Byplayer.json", strikeRateBySeason);
+outputToJson(
+  "../public/output/strike-rate-Byplayer.json",
+  strikeRateBySeason("V Kohli")
+);
 
 module.exports = strikeRateBySeason;
 
-// console.log(strikeRateBySeason("V Kohli"));
+console.log(strikeRateBySeason("V Kohli"));
