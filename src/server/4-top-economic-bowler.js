@@ -42,7 +42,7 @@ function getTopEconomicBowlersByYear(year) {
 
 outputToJson(
   "../public/output/top-economic-bowler-byYear.json",
-  getTopEconomicBowlersByYear
+  getTopEconomicBowlersByYear(2015)
 );
 
 module.exports = getTopEconomicBowlersByYear;
