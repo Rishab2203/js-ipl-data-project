@@ -1,27 +1,19 @@
 //Find a player who has won the highest number of Player of the Match awards for each season
 const fs = require("fs");
-const csvToJson = require("./index.js");
+const { csvToJson, outputToJson } = require("./index.js");
 
 const matchesData = csvToJson("../data/matches.csv");
-const deliveriesData = csvToJson("../data/deliveries.csv");
 
 function getPlayerOfTheMatchBySeason() {
   let result = matchesData.reduce((acc, match) => {
-    if (
-      !acc[match["season"]] ||
-      !acc[match["season"]][match["player_of_match"]]
-    ) {
-      acc[match["season"]] = {
-        ...acc[match["season"]],
-        [match["player_of_match"]]: 1,
-      };
-    } else {
-      let newCount = acc[match["season"]][match["player_of_match"]] + 1;
-      acc[match["season"]] = {
-        ...acc[match["season"]],
-        [match["player_of_match"]]: newCount,
-      };
+    let season = match["season"];
+    let player = match["player_of_match"];
+
+    if (!acc[season]) {
+      acc[season] = {};
     }
+    acc[season][player] = (acc[season][player] || 0) + 1;
+
     return acc;
   }, {});
 
@@ -37,14 +29,10 @@ function getPlayerOfTheMatchBySeason() {
   return result;
 }
 
-fs.writeFile(
+outputToJson(
   "../public/output/player-of-the-match.json",
-  JSON.stringify(getPlayerOfTheMatchBySeason(), null, 2),
-  (err) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log("file Created");
-  }
+  getPlayerOfTheMatchBySeason
 );
-console.log(getPlayerOfTheMatchBySeason());
+
+module.exports = getPlayerOfTheMatchBySeason;
+// console.log(getPlayerOfTheMatchBySeason());

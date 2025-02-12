@@ -1,5 +1,5 @@
 const fs = require("fs");
-const csvToJson = require("./index.js");
+const { csvToJson, outputToJson } = require("./index.js");
 
 const matchesData = csvToJson("../data/matches.csv");
 
@@ -9,7 +9,7 @@ function getTotalMatchesPlayedByYear() {
     if (!acc[curr["season"]] && curr["season"] != undefined) {
       acc[curr["season"]] = 1;
     } else if (curr["season"]) {
-      acc[curr["season"]]++;
+      acc[curr["season"]] += 1;
     }
     return acc;
   }, {});
@@ -17,16 +17,11 @@ function getTotalMatchesPlayedByYear() {
   return result;
 }
 
-fs.writeFile(
+outputToJson(
   "../public/output/matchesPerYear.json",
-  JSON.stringify(getTotalMatchesPlayedByYear(), null, 2),
-  (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log("Json created");
-  }
+  getTotalMatchesPlayedByYear
 );
+
 // console.log(getTotalMatchesPlayedByYear());
 
 module.exports = getTotalMatchesPlayedByYear;

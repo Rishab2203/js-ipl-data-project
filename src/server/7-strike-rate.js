@@ -1,12 +1,9 @@
 //Find the strike rate of a batsman for each season.
-
-const csvToJson = require("./index.js");
+const { csvToJson, outputToJson } = require("./index.js");
 const fs = require("fs");
 
 const deliveriesData = csvToJson("../data/deliveries.csv");
 const matchesData = csvToJson("../data/matches.csv");
-
-// console.log(deliveriesData[0]);
 
 function strikeRateBySeason(playerName) {
   const seasonById = matchesData.reduce((acc, match) => {
@@ -46,15 +43,8 @@ function strikeRateBySeason(playerName) {
   return result;
 }
 
-fs.writeFile(
-  "../public/output/strike-rate-Byplayer.json",
-  JSON.stringify(strikeRateBySeason("V kohli"), null, 2),
-  (err) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log("files created");
-  }
-);
+outputToJson("../public/output/strike-rate-Byplayer.json", strikeRateBySeason);
 
-console.log(strikeRateBySeason("V Kohli"));
+module.exports = strikeRateBySeason;
+
+// console.log(strikeRateBySeason("V Kohli"));

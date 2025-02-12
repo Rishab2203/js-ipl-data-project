@@ -1,5 +1,5 @@
 const fs = require("fs");
-const csvToJson = require("./index.js");
+const { csvToJson, outputToJson } = require("./index.js");
 //Top 10 economical bowlers in the year 2015
 
 const matchesData = csvToJson("../data/matches.csv");
@@ -40,16 +40,10 @@ function getTopEconomicBowlersByYear(year) {
   return economies.slice(0, 11);
 }
 
-fs.writeFile(
+outputToJson(
   "../public/output/top-economic-bowler-byYear.json",
-  JSON.stringify(getTopEconomicBowlersByYear(2015), null, 2),
-  (err) => {
-    if (err) {
-      throw new Error(err);
-    }
-    console.log("file created");
-  }
+  getTopEconomicBowlersByYear
 );
 
 module.exports = getTopEconomicBowlersByYear;
-console.log(getTopEconomicBowlersByYear(2015));
+// console.log(getTopEconomicBowlersByYear(2015));

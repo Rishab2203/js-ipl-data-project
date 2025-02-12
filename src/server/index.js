@@ -24,4 +24,13 @@ function csvToJson(path) {
   return arrayOfObj;
 }
 
-module.exports = csvToJson;
+const outputToJson = (path, cb) => {
+  fs.writeFile(path, JSON.stringify(cb(), null, 2), (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log("file Created");
+  });
+};
+
+module.exports = { csvToJson, outputToJson };
