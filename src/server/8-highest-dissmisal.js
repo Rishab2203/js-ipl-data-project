@@ -5,38 +5,35 @@ const { csvToJson, outputToJson } = require("./index.js");
 const deliveriesData = csvToJson("../data/deliveries.csv");
 
 function getHighestDismissal() {
-  let result = deliveriesData.reduce((acc, delivery) => {
-    if (delivery["batsman"] === delivery["player_dismissed"]) {
-      if (
-        !acc[delivery["batsman"]] ||
-        !acc[delivery["batsman"]][delivery["bowler"]]
-      ) {
-        acc[delivery["batsman"]] = {
-          ...acc[delivery["batsman"]],
-          [delivery["bowler"]]: 1,
-        };
-      } else {
-        acc[delivery["batsman"]][delivery["bowler"]] += 1;
+  let allBowlersAndAllBattersCombination = {};
+  for (let delivery of deliveriesData) {
+    let batsman = delivery["batsman"];
+    let bowler = delivery["bowler"];
+    let dismissedPlayer = delivery["player_dismissed"];
+    if (batsman === dismissedPlayer) {
+      if (!allBowlersAndAllBattersCombination[batsman]) {
+        allBowlersAndAllBattersCombination[batsman] = {};
       }
+      allBowlersAndAllBattersCombination[batsman][bowler] =
+        (allBowlersAndAllBattersCombination[batsman][bowler] || 0) + 1;
     }
-    return acc;
-  }, {});
+  }
 
-  result = Object.entries(result);
-  result = result.reduce((acc, player) => {
-    let [playerName, bowlers] = player;
+  let entries = Object.entries(allBowlersAndAllBattersCombination);
+
+  let result = {};
+
+  for (let [playerName, bowlers] of entries) {
     bowlers = Object.entries(bowlers);
     bowlers = bowlers.sort((a, b) => b[1] - a[1]);
 
     let bestBowler = bowlers[0];
-    acc = { ...acc, [playerName]: bestBowler };
-
-    return acc;
-  }, {});
+    result = { ...result, [playerName]: bestBowler };
+  }
   return result;
 }
 
-outputToJson("../public/output/highest-dismissal.json", getHighestDismissal);
+outputToJson("../public/output/highest-dismissal.json", getHighestDismissal());
 
 module.exports = getHighestDismissal;
 // console.log(getHighestDismissal());
