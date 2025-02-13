@@ -5,23 +5,22 @@ const matchesData = csvToJson("../data/matches.csv");
 
 //Number of matches played per year for all the years in IPL
 function getTotalMatchesPlayedByYear() {
-  const result = matchesData.reduce((acc, curr) => {
-    if (!acc[curr["season"]] && curr["season"] != undefined) {
-      acc[curr["season"]] = 1;
-    } else if (curr["season"]) {
-      acc[curr["season"]] += 1;
-    }
-    return acc;
-  }, {});
+  let result = {};
+
+  for (let match of matchesData) {
+    let season = match["season"];
+
+    result[season] = (result[season] || 0) + 1;
+  }
 
   return result;
 }
 
 outputToJson(
   "../public/output/matchesPerYear.json",
-  getTotalMatchesPlayedByYear
+  getTotalMatchesPlayedByYear()
 );
 
-// console.log(getTotalMatchesPlayedByYear());
+console.log(getTotalMatchesPlayedByYear());
 
 module.exports = getTotalMatchesPlayedByYear;

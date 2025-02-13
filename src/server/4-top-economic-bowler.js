@@ -6,35 +6,44 @@ const matchesData = csvToJson("../data/matches.csv");
 const deliveriesData = csvToJson("../data/deliveries.csv");
 
 function getTopEconomicBowlersByYear(year) {
-  const matchesByYear = matchesData.filter((match) => match.season == year);
+  let allMatchesIdByYear = [];
 
-  const allMatchesIdByYear = matchesByYear.reduce((acc, match) => {
-    acc.push(match.id);
-    return acc;
-  }, []);
-
-  const deliveriesByYear = deliveriesData.filter((delivery) =>
-    allMatchesIdByYear.includes(delivery["match_id"])
-  );
-  const runsAndDeliveries = deliveriesByYear.reduce((acc, delivery) => {
-    let runs = parseInt(delivery["batsman_runs"]);
-    if (!acc[delivery["bowler"]]) {
-      acc[delivery["bowler"]] = { total_runs_given: runs, total_deliveries: 1 };
-    } else {
-      acc[delivery["bowler"]]["total_runs_given"] += runs;
-      acc[delivery["bowler"]]["total_deliveries"]++;
+  for (let match of matchesData) {
+    if (match["season"] == year) {
+      allMatchesIdByYear.push(match.id);
     }
-    return acc;
-  }, {});
+  }
+
+  const deliveriesByYear = [];
+  for (let delivery of deliveriesData) {
+    if (allMatchesIdByYear.includes(delivery["match_id"])) {
+      deliveriesByYear.push(delivery);
+    }
+  }
+
+  const runsAndDeliveries = {};
+
+  for (let delivery of deliveriesByYear) {
+    let bowler = delivery["bowler"];
+    let runs = parseInt(delivery["batsman_runs"]);
+
+    if (!runsAndDeliveries[bowler]) {
+      runsAndDeliveries[bowler] = {};
+    }
+    runsAndDeliveries[bowler]["total_runs_given"] =
+      (runsAndDeliveries[bowler]["total_runs_given"] || 0) + runs;
+    runsAndDeliveries[bowler]["total_deliveries"] =
+      (runsAndDeliveries[bowler]["total_deliveries"] || 0) + 1;
+  }
 
   const totalRunsAndDeliveries = Object.entries(runsAndDeliveries);
-  let economies = totalRunsAndDeliveries.reduce((acc, bowler) => {
-    let [bowler_name, runs_deliveries] = bowler;
+
+  let economies = {};
+  for (let [bowler_name, runs_deliveries] of totalRunsAndDeliveries) {
     let economy =
       runs_deliveries["total_runs_given"] / runs_deliveries["total_deliveries"];
-    acc = { ...acc, [bowler_name]: economy };
-    return acc;
-  }, {});
+    economies[bowler_name] = economy;
+  }
 
   economies = Object.entries(economies).sort((a, b) => a[1] - b[1]);
   return economies.slice(0, 11);

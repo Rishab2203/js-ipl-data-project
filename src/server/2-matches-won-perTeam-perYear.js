@@ -5,20 +5,22 @@ const { csvToJson, outputToJson } = require("./index.js");
 const matchesData = csvToJson("../data/matches.csv");
 
 function getMatchesWonByTeamsEachYear() {
-  const result = matchesData.reduce((acc, match) => {
-    if (!acc[match["winner"]] || !acc[match["winner"]][match["season"]]) {
-      acc[match["winner"]] = { ...acc[match["winner"]], [match["season"]]: 1 };
-    } else {
-      acc[match["winner"]][match["season"]]++;
+  const result = {};
+  for (let match of matchesData) {
+    let season = match["season"];
+    let teamName = match["winner"];
+    if (!result[season]) {
+      result[season] = {};
     }
-    return acc;
-  }, {});
+    result[season][teamName] = (result[season][teamName] || 0) + 1;
+  }
+
   return result;
 }
 
 outputToJson(
   "../public/output/matches-won-perTeam.json",
-  getMatchesWonByTeamsEachYear
+  getMatchesWonByTeamsEachYear()
 );
 
 // console.log(getMatchesWonByTeamsEachYear());

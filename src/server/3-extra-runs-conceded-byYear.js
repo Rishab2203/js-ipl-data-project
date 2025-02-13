@@ -6,28 +6,30 @@ const deliveriesData = csvToJson("../data/deliveries.csv");
 const matchesData = csvToJson("../data/matches.csv");
 
 function getExtraRunsConcededByYear(year) {
-  let matchesByYear = matchesData.filter(
-    (delivery) => delivery["season"] == year
-  );
-  let allMatchesIdByYear = matchesByYear.reduce((acc, match) => {
-    acc.push(match.id);
-    return acc;
-  }, []);
+  let allMatchesIdByYear = [];
 
-  const result = deliveriesData
-    .filter((delivery) => {
-      return allMatchesIdByYear.includes(delivery["match_id"]);
-    })
-    .reduce((acc, delivery) => {
-      let extra_runs = parseInt(delivery["extra_runs"]);
+  for (let match of matchesData) {
+    if (match["season"] == year) {
+      allMatchesIdByYear.push(match.id);
+    }
+  }
 
-      if (!acc[delivery["bowling_team"]]) {
-        acc[delivery["bowling_team"]] = extra_runs;
-      } else {
-        acc[delivery["bowling_team"]] += extra_runs;
-      }
-      return acc;
-    }, {});
+  const deliveriesByMatchId = [];
+  for (let delivery of deliveriesData) {
+    if (allMatchesIdByYear.includes(delivery["match_id"])) {
+      deliveriesByMatchId.push(delivery);
+    }
+  }
+
+  const result = {};
+
+  for (let delivery of deliveriesByMatchId) {
+    let extra_runs = parseInt(delivery["extra_runs"]);
+    let bowling_team = delivery["bowling_team"];
+
+    result[bowling_team] = (result[bowling_team] || 0) + extra_runs;
+  }
+
   return result;
 }
 
