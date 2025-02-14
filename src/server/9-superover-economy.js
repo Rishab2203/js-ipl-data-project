@@ -28,17 +28,6 @@ function getTopEconomicBowlersInSuperOver() {
       (runsAndDeliveries[bowler]["total_deliveries"] || 0) + 1;
   }
 
-  // const runsAndDeliveries = superOverDeliveries.reduce((acc, delivery) => {
-  //   let runs = parseInt(delivery["batsman_runs"]);
-  //   if (!acc[delivery["bowler"]]) {
-  //     acc[delivery["bowler"]] = { total_runs_given: runs, total_deliveries: 1 };
-  //   } else {
-  //     acc[delivery["bowler"]]["total_runs_given"] += runs;
-  //     acc[delivery["bowler"]]["total_deliveries"]++;
-  //   }
-  //   return acc;
-  // }, {});
-
   const totalRunsAndDeliveries = Object.entries(runsAndDeliveries);
   let economies = {};
   for (let [bowler_name, runs_deliveries] of totalRunsAndDeliveries) {
