@@ -19,7 +19,7 @@ function getTotalMatchesPlayedByYear() {
 
 outputToJson(
   "../public/output/matchesPerYear.json",
-  getTotalMatchesPlayedByYear
+  getTotalMatchesPlayedByYear()
 );
 
 // console.log(getTotalMatchesPlayedByYear());

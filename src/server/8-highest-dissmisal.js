@@ -36,7 +36,7 @@ function getHighestDismissal() {
   return result;
 }
 
-outputToJson("../public/output/highest-dismissal.json", getHighestDismissal);
+outputToJson("../public/output/highest-dismissal.json", getHighestDismissal());
 
 module.exports = getHighestDismissal;
 // console.log(getHighestDismissal());

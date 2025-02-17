@@ -34,7 +34,7 @@ function getTopEconomicBowlersInSuperOver() {
 
 outputToJson(
   "../public/output/superover-economy.json",
-  getTopEconomicBowlersInSuperOver
+  getTopEconomicBowlersInSuperOver()
 );
 
 module.exports = getTopEconomicBowlersInSuperOver;

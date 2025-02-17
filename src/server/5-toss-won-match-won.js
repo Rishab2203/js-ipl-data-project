@@ -15,7 +15,7 @@ function wonTossWonMatch() {
   return result;
 }
 
-outputToJson("../public/output/toss-won-match-won.json", wonTossWonMatch);
+outputToJson("../public/output/toss-won-match-won.json", wonTossWonMatch());
 
 module.exports = wonTossWonMatch;
 // console.log(wonTossWonMatch());

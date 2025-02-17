@@ -5,7 +5,7 @@ const { csvToJson, outputToJson } = require("./index.js");
 const matchesData = csvToJson("../data/matches.csv");
 
 function getPlayerOfTheMatchBySeason() {
-  let result = matchesData.reduce((acc, match) => {
+  let allPlayerOfMatchByYear = matchesData.reduce((acc, match) => {
     let season = match["season"];
     let player = match["player_of_match"];
 
@@ -17,9 +17,9 @@ function getPlayerOfTheMatchBySeason() {
     return acc;
   }, {});
 
-  result = Object.entries(result);
+  allPlayerOfMatchByYear = Object.entries(allPlayerOfMatchByYear);
 
-  result = result.reduce((acc, season) => {
+  let result = allPlayerOfMatchByYear.reduce((acc, season) => {
     let [year, players] = season;
     players = Object.entries(players);
     players.sort((a, b) => b[1] - a[1]);
@@ -31,7 +31,7 @@ function getPlayerOfTheMatchBySeason() {
 
 outputToJson(
   "../public/output/player-of-the-match.json",
-  getPlayerOfTheMatchBySeason
+  getPlayerOfTheMatchBySeason()
 );
 
 module.exports = getPlayerOfTheMatchBySeason;
