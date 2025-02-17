@@ -5,25 +5,20 @@ const { csvToJson, outputToJson } = require("./index.js");
 const deliveriesData = csvToJson("../data/deliveries.csv");
 
 function getHighestDismissal() {
-  let result = deliveriesData.reduce((acc, delivery) => {
+  let allDismissalsForBatsman = deliveriesData.reduce((acc, delivery) => {
     if (delivery["batsman"] === delivery["player_dismissed"]) {
-      if (
-        !acc[delivery["batsman"]] ||
-        !acc[delivery["batsman"]][delivery["bowler"]]
-      ) {
-        acc[delivery["batsman"]] = {
-          ...acc[delivery["batsman"]],
-          [delivery["bowler"]]: 1,
-        };
-      } else {
-        acc[delivery["batsman"]][delivery["bowler"]] += 1;
+      let batsman = delivery["batsman"];
+      let bowler = delivery["bowler"];
+      if (!acc[batsman]) {
+        acc[batsman] = {};
       }
+      acc[batsman][bowler] = (acc[batsman][bowler] || 0) + 1;
     }
     return acc;
   }, {});
 
-  result = Object.entries(result);
-  result = result.reduce((acc, player) => {
+  allDismissalsForBatsman = Object.entries(allDismissalsForBatsman);
+  let result = allDismissalsForBatsman.reduce((acc, player) => {
     let [playerName, bowlers] = player;
     bowlers = Object.entries(bowlers);
     bowlers = bowlers.sort((a, b) => b[1] - a[1]);
@@ -36,7 +31,7 @@ function getHighestDismissal() {
   return result;
 }
 
-outputToJson("../public/output/highest-dismissal.json", getHighestDismissal());
+// outputToJson("../public/output/highest-dismissal.json", getHighestDismissal());
 
 module.exports = getHighestDismissal;
-// console.log(getHighestDismissal());
+console.log(getHighestDismissal());
