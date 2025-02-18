@@ -6,11 +6,10 @@ const deliveriesData = csvToJson("../data/deliveries.csv");
 const matchesData = csvToJson("../data/matches.csv");
 
 function getExtraRunsConcededByYear(year) {
-  let matchesByYear = matchesData.filter(
-    (delivery) => delivery["season"] == year
-  );
-  let allMatchesIdByYear = matchesByYear.reduce((acc, match) => {
-    acc.push(match.id);
+  let allMatchesIdByYear = matchesData.reduce((acc, match) => {
+    if (match["season"] == year) {
+      acc.push(match["id"]);
+    }
     return acc;
   }, []);
 
@@ -31,11 +30,11 @@ function getExtraRunsConcededByYear(year) {
   return result;
 }
 
-outputToJson(
-  "../public/output/extra-runs-conceded-byYear.json",
-  getExtraRunsConcededByYear(2016)
-);
+// outputToJson(
+//   "../public/output/extra-runs-conceded-byYear.json",
+//   getExtraRunsConcededByYear(2016)
+// );
 
 module.exports = getExtraRunsConcededByYear;
 
-// console.log(getExtraRunsConcededByYear(2016));
+console.log(getExtraRunsConcededByYear(2016));
