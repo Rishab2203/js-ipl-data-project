@@ -6,10 +6,10 @@ const matchesData = csvToJson("../data/matches.csv");
 const deliveriesData = csvToJson("../data/deliveries.csv");
 
 function getTopEconomicBowlersByYear(year) {
-  const matchesByYear = matchesData.filter((match) => match.season == year);
-
-  const allMatchesIdByYear = matchesByYear.reduce((acc, match) => {
-    acc.push(match.id);
+  const allMatchesIdByYear = matchesData.reduce((acc, match) => {
+    if (match["season"] == year) {
+      acc.push(match.id);
+    }
     return acc;
   }, []);
 
@@ -41,7 +41,7 @@ function getTopEconomicBowlersByYear(year) {
 }
 
 outputToJson(
-  "../public/output/top-economic-bowler-byYear.json",
+  "../public/output/top-economic-bowler-by-year.json",
   getTopEconomicBowlersByYear(2015)
 );
 
